@@ -26,6 +26,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.date.outputs.date }}
           files: |
             donors.toml
             metrics.toml
