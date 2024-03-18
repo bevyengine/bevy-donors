@@ -40,3 +40,7 @@ jobs:
           files: |
             donors.toml
             metrics.toml
+      - name: trigger website deploy
+        run: gh --repo bevyengine/bevy-website workflow run deploy.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.CART_PAT }}
