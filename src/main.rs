@@ -121,6 +121,14 @@ fn apply_donor_info(donors: &mut Vec<Donor>, donor_info: Vec<Donor>) {
                 if let Some(logo) = &donor_info.logo {
                     donor.logo = Some(logo.clone());
                 }
+
+                if let Some(style) = &donor_info.style {
+                    donor.style = Some(style.clone());
+                }
+
+                if let Some(amount) = &donor_info.amount {
+                    donor.amount = Some(*amount);
+                }
             }
         }
     }
@@ -210,6 +218,7 @@ fn compute_stripe_donors(
             source: Some("stripe".to_string()),
             past: Some(past),
             logo: None,
+            style: None,
         });
     }
 
@@ -249,6 +258,7 @@ struct Donor {
     logo: Option<String>,
     amount: Option<i64>,
     source: Option<String>,
+    style: Option<String>,
     past: Option<bool>,
 }
 
