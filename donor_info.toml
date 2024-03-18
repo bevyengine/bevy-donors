@@ -2,8 +2,7 @@
 customer_id = "cus_PihVbmEUk0vBkO"
 logo = "dead_money.png"
 link = "https://deadmoney.gg/"
-# this is an override to make the area a bit fairer for the square logo at the Diamond level
-style = "height: 75px"
+square_logo = true
 
 [[donor]]
 customer_id = "cus_Pl90EWRu326v6N"
