@@ -129,6 +129,10 @@ fn apply_donor_info(donors: &mut Vec<Donor>, donor_info: Vec<Donor>) {
                 if let Some(amount) = &donor_info.amount {
                     donor.amount = Some(*amount);
                 }
+
+                if let Some(square_logo) = &donor_info.square_logo {
+                    donor.square_logo = Some(*square_logo);
+                }
             }
         }
     }
@@ -260,6 +264,7 @@ struct Donor {
     source: Option<String>,
     style: Option<String>,
     past: Option<bool>,
+    square_logo: Option<bool>,
 }
 
 #[derive(Default, Serialize)]
