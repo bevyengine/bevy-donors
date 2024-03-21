@@ -223,6 +223,7 @@ fn compute_stripe_donors(
             past: Some(past),
             logo: None,
             style: None,
+            square_logo: None,
         });
     }
 
