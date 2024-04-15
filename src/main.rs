@@ -149,7 +149,7 @@ fn compute_stripe_donors(
     payment_intents: &[PaymentIntent],
     checkout_sessions: &[CheckoutSession],
 ) -> Vec<Donor> {
-    let mut donors = Vec::new();
+    let mut donors = HashMap::new();
 
     let mut customer_id_to_checkouts = HashMap::new();
     let now = Utc::now();
@@ -173,6 +173,8 @@ fn compute_stripe_donors(
         checkouts.sort_by_key(|c| c.created);
     }
 
+    let mut payment_intents = payment_intents.to_vec();
+    payment_intents.sort_by_key(|pi| pi.created);
     for payment_intent in payment_intents {
         if payment_intent.status != PaymentIntentStatus::Succeeded {
             continue;
@@ -213,21 +215,24 @@ fn compute_stripe_donors(
 
         let past = now - payment_time > TimeDelta::try_days(31 + GRACE_PERIOD_IN_DAYS).unwrap();
 
-        donors.push(Donor {
-            customer_id: Some(customer_id.to_string()),
-            // convert from cents to dollars
-            amount: Some(payment_intent.amount / 100),
-            link,
-            name,
-            source: Some("stripe".to_string()),
-            past: Some(past),
-            logo: None,
-            style: None,
-            square_logo: None,
-        });
+        donors.insert(
+            customer_id.to_string(),
+            Donor {
+                customer_id: Some(customer_id.to_string()),
+                // convert from cents to dollars
+                amount: Some(payment_intent.amount / 100),
+                link,
+                name,
+                source: Some("stripe".to_string()),
+                past: Some(past),
+                logo: None,
+                style: None,
+                square_logo: None,
+            },
+        );
     }
 
-    donors
+    donors.into_values().collect()
 }
 
 fn compute_metrics(donors: &[Donor]) -> Metrics {
