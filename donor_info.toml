@@ -1,9 +1,16 @@
 [[donor]]
 customer_id = "cus_PihVbmEUk0vBkO"
 logo = "dead_money.png"
-link = "https://deadmoney.gg/"
+link = "https://deadmoney.gg"
 square_logo = true
 
 [[donor]]
 customer_id = "cus_Pl90EWRu326v6N"
 logo = "cblogo.svg"
+
+[[donor]]
+name = "Foresight Spatial Labs"
+link = "https://www.fslabs.ca"
+logo = "Foresight_Spatial_Labs.svg"
+amount = 4000
+source = "bank_transfer"
