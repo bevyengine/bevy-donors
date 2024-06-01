@@ -9,6 +9,11 @@ customer_id = "cus_Pl90EWRu326v6N"
 logo = "cblogo.svg"
 
 [[donor]]
+customer_id = "cus_QCZaYjp4CCulkK"
+logo = "holonautic.png"
+logo_scale = 0.45
+
+[[donor]]
 name = "Foresight Spatial Labs"
 link = "https://www.fslabs.ca"
 logo = "Foresight_Spatial_Labs.svg"
