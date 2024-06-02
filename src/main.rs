@@ -133,6 +133,10 @@ fn apply_donor_info(donors: &mut Vec<Donor>, donor_info: Vec<Donor>) {
                 if let Some(square_logo) = &donor_info.square_logo {
                     donor.square_logo = Some(*square_logo);
                 }
+
+                if let Some(scale) = &donor_info.logo_scale {
+                    donor.logo_scale = Some(*scale);
+                }
             }
         }
     }
@@ -228,6 +232,7 @@ fn compute_stripe_donors(
                 logo: None,
                 style: None,
                 square_logo: None,
+                logo_scale: None,
             },
         );
     }
@@ -271,6 +276,7 @@ struct Donor {
     style: Option<String>,
     past: Option<bool>,
     square_logo: Option<bool>,
+    logo_scale: Option<f32>,
 }
 
 #[derive(Default, Serialize)]
