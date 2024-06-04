@@ -1,4 +1,9 @@
 [[donor]]
+customer_id = "cus_QEBLqvEudErusz"
+link = "https://www.fslabs.ca"
+logo = "Foresight_Spatial_Labs.svg"
+
+[[donor]]
 customer_id = "cus_PihVbmEUk0vBkO"
 logo = "dead_money.png"
 link = "https://deadmoney.gg"
@@ -12,10 +17,3 @@ logo = "cblogo.svg"
 customer_id = "cus_QCZaYjp4CCulkK"
 logo = "holonautic.png"
 logo_scale = 0.45
-
-[[donor]]
-name = "Foresight Spatial Labs"
-link = "https://www.fslabs.ca"
-logo = "Foresight_Spatial_Labs.svg"
-amount = 4000
-source = "bank_transfer"
