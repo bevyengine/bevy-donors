@@ -155,26 +155,20 @@ fn compute_stripe_donors(
 ) -> Vec<Donor> {
     let mut donors = HashMap::new();
 
-    let mut customer_id_to_checkouts = HashMap::new();
+    let mut checkouts = HashMap::new();
     let now = Utc::now();
     for checkout_session in checkout_sessions {
         if checkout_session.status != Some(stripe::CheckoutSessionStatus::Complete) {
             continue;
         }
 
-        let customer = checkout_session.customer.as_ref().expect("Customer information was not included. Code currently assumes all complete checkouts have customers.");
-        let customer_id = customer.id();
+        let payment_intent = checkout_session.payment_intent.as_ref().expect("Payment intent was not included. Code currently assumes all CheckoutSessions have payment intents.");
+        let payment_intent_id = payment_intent.id();
 
-        let checkouts = customer_id_to_checkouts
-            .entry(customer_id)
-            .or_insert_with(Vec::new);
-
-        checkouts.push(checkout_session.clone());
-    }
-
-    // Ensure checkouts are sorted by the time they were created
-    for checkouts in customer_id_to_checkouts.values_mut() {
-        checkouts.sort_by_key(|c| c.created);
+        checkouts
+            .entry(payment_intent_id)
+            .or_insert_with(Vec::new)
+            .push(checkout_session.clone());
     }
 
     let mut payment_intents = payment_intents.to_vec();
@@ -191,16 +185,15 @@ fn compute_stripe_donors(
         let customer = payment_intent.customer.as_ref().expect("Customer information was not included. Code currently assumes all succeeded PaymentIntents have customers.");
         let customer_id = customer.id();
 
-        let checkouts = customer_id_to_checkouts.get(&customer_id).expect(
-            "Successful payment intents are expected to have at least one checkout session",
-        );
-
         let checkout = checkouts
-            .iter()
-            .rev()
-            .find(|c| c.amount_total == Some(payment_intent.amount))
+            .get(&payment_intent.id)
             .expect(
-                "Successful payment intent should have a matching checkout with the same amount",
+                "Successful payment intents are expected to have at least one checkout session.",
+            )
+            .into_iter()
+            .max_by_key(|c| c.created)
+            .expect(
+                "Successful payment intent should have a matching checkout with the same amount.",
             );
 
         let mut link = None;
