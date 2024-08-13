@@ -26,3 +26,8 @@ logo = "keygen.svg"
 customer_id = "cus_Q5reWVu1n5bNFp"
 logo = "roids.png"
 square_logo = true
+
+[[donor]]
+customer_id = "cus_QeVAq5EY70jHv8"
+logo = "rustunit.png"
+square_logo = true
