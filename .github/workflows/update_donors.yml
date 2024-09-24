@@ -10,6 +10,8 @@ env:
 
 jobs:
   update-donors:
+    permissions:
+      contents: write
     if: github.repository == 'bevyengine/bevy-donors'
     runs-on: ubuntu-latest
     timeout-minutes: 30
