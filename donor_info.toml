@@ -1,33 +1,33 @@
 [[donor]]
-customer_id = "cus_QEBLqvEudErusz"
+customer_id = "stripe:cus_QEBLqvEudErusz"
 link = "https://www.fslabs.ca"
 logo = "Foresight_Spatial_Labs.svg"
 
 [[donor]]
-customer_id = "cus_PihVbmEUk0vBkO"
+customer_id = "stripe:cus_PihVbmEUk0vBkO"
 logo = "dead_money.png"
 link = "https://deadmoney.gg"
 square_logo = true
 
 [[donor]]
-customer_id = "cus_Pl90EWRu326v6N"
+customer_id = "stripe:cus_Pl90EWRu326v6N"
 logo = "cblogo.svg"
 
 [[donor]]
-customer_id = "cus_QCZaYjp4CCulkK"
+customer_id = "stripe:cus_QCZaYjp4CCulkK"
 logo = "holonautic.png"
 logo_scale = 0.45
 
 [[donor]]
-customer_id = "cus_QIGvoRCqPjeUX0"
+customer_id = "stripe:cus_QIGvoRCqPjeUX0"
 logo = "keygen.svg"
 
 [[donor]]
-customer_id = "cus_Q5reWVu1n5bNFp"
+customer_id = "stripe:cus_Q5reWVu1n5bNFp"
 logo = "roids.png"
 square_logo = true
 
 [[donor]]
-customer_id = "cus_QeVAq5EY70jHv8"
+customer_id = "stripe:cus_QeVAq5EY70jHv8"
 logo = "rustunit.png"
 square_logo = true

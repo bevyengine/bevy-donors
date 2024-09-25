@@ -131,7 +131,7 @@ pub(crate) async fn get_stripe_donors(now: DateTime<Utc>) -> Vec<Donor> {
         donors.insert(
             customer_id.to_string(),
             Donor {
-                customer_id: Some(customer_id.to_string()),
+                customer_id: Some(format!("stripe:{customer_id}")),
                 // convert from cents to dollars
                 amount: Some(payment_intent.amount / 100),
                 link,

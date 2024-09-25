@@ -10,6 +10,7 @@ edition = "2021"
 async-stripe = { version = "0.34", features = ["async", "runtime-tokio-hyper"] }
 tokio = { version = "1.0", features = ["full"] }
 futures-lite = "2.2.0"
+reqwest = { version = "0.12", features = ["json"] }
 chrono = "0.4"
 toml = "0.8"
 serde = "1.0"
