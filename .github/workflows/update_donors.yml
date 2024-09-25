@@ -17,17 +17,19 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
-        with:
-          ssh-key: ${{ secrets.EVERY_ORG_PRIVATE_KEY }}
-          repository: bevyengine/every_org_donors
-          path: every_org_donors
+      # Uncomment this to switch from calling Every.org APIs to pulling manual CSV dumps of every.org donor data from bevyengine/every_org_donors
+      # - uses: actions/checkout@v4
+      #   with:
+      #     ssh-key: ${{ secrets.EVERY_ORG_PRIVATE_KEY }}
+      #     repository: bevyengine/every_org_donors
+      #     path: every_org_donors
 
       - uses: dtolnay/rust-toolchain@stable
 
       - name: Generate donors.toml and metrics.toml
         env:
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          EVERY_ORG_SESSION_COOKIE: ${{ secrets.EVERY_ORG_SESSION_COOKIE }}
         run: |
           cargo run
       - name: Tag the repository

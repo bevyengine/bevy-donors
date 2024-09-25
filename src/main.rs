@@ -28,7 +28,7 @@ async fn main() {
     donors.extend(get_stripe_donors(now).await);
 
     // read every.org donors
-    donors.extend(get_every_org_donors(now).unwrap());
+    donors.extend(get_every_org_donors(now).await.unwrap());
 
     apply_donor_info(&mut donors, donor_info.donor);
     let metrics = compute_metrics(&donors);
@@ -128,7 +128,7 @@ struct Donors {
     donor: Vec<Donor>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 struct Donor {
     customer_id: Option<String>,
     name: Option<String>,

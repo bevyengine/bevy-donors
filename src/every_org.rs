@@ -1,11 +1,68 @@
 use crate::{is_past, Donor};
 use chrono::{DateTime, Utc};
+use reqwest::Client;
 use serde::Deserialize;
 use std::{error::Error, fs::File};
 
+const DONOR_CSV_PATH: &str = "every_org_donors/donors.csv";
+const BEVY_DONATIONS_BALANCE_ROUTE: &str = "https://api.www.every.org/api/nonprofits/958ff03c-9c7b-44a4-a66a-2fcc9b8dfed7/admin/donationsBalance";
+
+async fn call_donation_balance_api() -> Result<DonationsBalance, reqwest::Error> {
+    let client = Client::new();
+    let auth_cookie =
+        std::env::var("EVERY_ORG_SESSION_COOKIE").expect("Missing EVERY_ORG_SESSION_COOKIE in env");
+    let response = client
+        .get(BEVY_DONATIONS_BALANCE_ROUTE)
+        .header("Cookie", auth_cookie)
+        .send()
+        .await?;
+    response.json::<DonationsBalance>().await
+}
+
+pub(crate) async fn get_every_org_donors(now: DateTime<Utc>) -> Result<Vec<Donor>, Box<dyn Error>> {
+    let mut csv_donors = Vec::<EveryOrgDonorCsv>::new();
+    if std::fs::metadata(DONOR_CSV_PATH).is_ok() {
+        let file = File::open(DONOR_CSV_PATH).unwrap();
+        let mut reader = csv::Reader::from_reader(&file);
+        for record in reader.deserialize() {
+            csv_donors.push(record?);
+        }
+    } else {
+        let donations_balance = call_donation_balance_api().await?;
+        let csv = donations_balance.data.csv_data.rebuild_csv();
+        let mut reader = csv::Reader::from_reader(csv.as_bytes());
+        for record in reader.deserialize() {
+            csv_donors.push(record?);
+        }
+    };
+    let mut donors = Vec::new();
+    for csv_donor in &csv_donors {
+        let Ok(mut donor) = Donor::try_from(csv_donor) else {
+            continue;
+        };
+        if csv_donor.recurring_donation_status.as_deref() == Some("Active") {
+            donor.past = Some(false);
+        } else {
+            let last_donation = csv_donor.last_donation.as_deref().unwrap_or("");
+            let past = if let Ok(payment_time) = DateTime::parse_from_str(last_donation, "%m/%d/%Y")
+            {
+                is_past(now, payment_time.to_utc())
+            } else {
+                true
+            };
+
+            donor.past = Some(past);
+        }
+
+        donors.push(donor);
+    }
+
+    Ok(donors)
+}
+
 #[allow(dead_code)]
 #[derive(Debug, Deserialize)]
-pub(crate) struct EveryOrgDonor {
+pub(crate) struct EveryOrgDonorCsv {
     #[serde(rename = "Created")]
     created: Option<String>,
     #[serde(rename = "Charge id")]
@@ -109,44 +166,15 @@ pub(crate) struct EveryOrgDonor {
     notes: Option<String>,
 }
 
-pub(crate) fn get_every_org_donors(now: DateTime<Utc>) -> Result<Vec<Donor>, Box<dyn Error>> {
-    let file = File::open("every_org_donors/donors.csv").unwrap();
-    let mut reader = csv::Reader::from_reader(&file);
-    let mut donors = Vec::new();
-    for record in reader.deserialize() {
-        let every_org_donor: EveryOrgDonor = record?;
-        let Ok(mut donor) = Donor::try_from(&every_org_donor) else {
-            continue;
-        };
-        if every_org_donor.recurring_donation_status.as_deref() == Some("Active") {
-            donor.past = Some(false);
-        } else {
-            let last_donation = every_org_donor.last_donation.as_deref().unwrap_or("");
-            let past = if let Ok(payment_time) = DateTime::parse_from_str(last_donation, "%m/%d/%Y")
-            {
-                is_past(now, payment_time.to_utc())
-            } else {
-                true
-            };
-
-            donor.past = Some(past);
-        }
-
-        donors.push(donor);
-    }
-
-    Ok(donors)
-}
-
-impl TryFrom<&EveryOrgDonor> for Donor {
+impl TryFrom<&EveryOrgDonorCsv> for Donor {
     type Error = anyhow::Error;
-    fn try_from(value: &EveryOrgDonor) -> Result<Donor, anyhow::Error> {
+    fn try_from(value: &EveryOrgDonorCsv) -> Result<Donor, anyhow::Error> {
         // This is _very_ important to check. We can't leak non-public information
         let public_supporter = value.public_supporter == Some("true".to_string());
         Ok(Donor {
             customer_id: match value.donor_id.as_deref() {
                 Some("") | None => None,
-                Some(v) => Some(v.to_string()),
+                Some(v) => Some(format!("every.org:{v}")),
             },
             source: Some("every.org".to_string()),
             /* Public Fields */
@@ -168,5 +196,66 @@ impl TryFrom<&EveryOrgDonor> for Donor {
             square_logo: None,
             style: None,
         })
+    }
+}
+
+#[allow(dead_code)]
+#[derive(Debug, Deserialize)]
+struct DonationsBalance {
+    message: String,
+    data: Data,
+}
+
+#[allow(dead_code)]
+#[derive(Debug, Deserialize)]
+struct Data {
+    #[serde(alias = "allTimeBalance")]
+    all_time_balance: Amount,
+    #[serde(alias = "allTimeRecurring")]
+    all_time_recurring: Amount,
+    #[serde(alias = "availableBalance")]
+    available_balance: Amount,
+    #[serde(alias = "currentBalance")]
+    current_balance: Amount,
+    #[serde(alias = "annualRecurringRevenue")]
+    annual_recurring_revenue: Amount,
+    #[serde(alias = "monthlyRecurringRevenue")]
+    monthly_recurring_revenue: Amount,
+    #[serde(alias = "giftCount")]
+    gift_count: usize,
+    #[serde(alias = "recurringSupporterCount")]
+    recurring_supporter_count: usize,
+    #[serde(alias = "usersFundraising")]
+    users_fundraising: usize,
+    #[serde(alias = "csvData")]
+    csv_data: CsvData,
+}
+
+#[allow(dead_code)]
+#[derive(Debug, Deserialize)]
+struct Amount {
+    amount: String,
+    currency: String,
+}
+
+#[allow(dead_code)]
+#[derive(Debug, Deserialize)]
+struct CsvData {
+    ok: Vec<Vec<String>>,
+    error: Vec<Vec<String>>,
+}
+
+impl CsvData {
+    fn rebuild_csv(&self) -> String {
+        let mut csv = String::new();
+        for row in &self.ok {
+            for column in row {
+                csv.push_str(column);
+                csv.push(',');
+            }
+            csv.push('\n');
+        }
+
+        csv
     }
 }
