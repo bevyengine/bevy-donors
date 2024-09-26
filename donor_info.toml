@@ -39,3 +39,8 @@ name = "rudderbucky"
 [[donor]]
 customer_id = "every.org:b5b96bb4-a0f1-45ff-b7c0-011028bc7bbc"
 name = "IceSentry"
+
+[[donor]]
+customer_id = "every.org:ef5c3e95-8f47-4b8d-8ad6-e59c776074cd"
+logo = "navier-ai.png"
+link = "https://navier.ai/"
