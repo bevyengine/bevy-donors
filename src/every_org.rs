@@ -250,7 +250,9 @@ impl CsvData {
         let mut csv = String::new();
         for row in &self.ok {
             for column in row {
-                csv.push_str(column);
+                // disallow commas as this breaks the CSV
+                let column = column.replace(',', " ");
+                csv.push_str(&column);
                 csv.push(',');
             }
             csv.push('\n');
