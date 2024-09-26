@@ -31,3 +31,11 @@ square_logo = true
 customer_id = "stripe:cus_QeVAq5EY70jHv8"
 logo = "rustunit.png"
 square_logo = true
+
+[[donor]]
+customer_id = "every.org:4ecf71b1-792c-430b-a722-4fb081c02126"
+name = "rudderbucky"
+
+[[donor]]
+customer_id = "every.org:b5b96bb4-a0f1-45ff-b7c0-011028bc7bbc"
+name = "IceSentry"
