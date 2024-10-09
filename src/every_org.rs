@@ -2,7 +2,8 @@ use crate::{is_past, Donor};
 use chrono::{DateTime, Utc};
 use reqwest::Client;
 use serde::Deserialize;
-use std::{error::Error, fs::File};
+use std::{error::Error, fs::File, num::ParseFloatError};
+use thiserror::Error;
 
 const DONOR_CSV_PATH: &str = "every_org_donors/donors.csv";
 const BEVY_DONATIONS_BALANCE_ROUTE: &str = "https://api.www.every.org/api/nonprofits/958ff03c-9c7b-44a4-a66a-2fcc9b8dfed7/admin/donationsBalance";
@@ -166,11 +167,24 @@ pub(crate) struct EveryOrgDonorCsv {
     notes: Option<String>,
 }
 
+#[derive(Error, Debug)]
+pub enum EveryOrgToDonorError {
+    #[error("Every.org donor is a private supporter")]
+    PrivateSupporter,
+    #[error("No amount provided")]
+    NoAmount,
+    #[error("Failed to parse amount")]
+    ParseAmountError(#[from] ParseFloatError),
+}
+
 impl TryFrom<&EveryOrgDonorCsv> for Donor {
-    type Error = anyhow::Error;
-    fn try_from(value: &EveryOrgDonorCsv) -> Result<Donor, anyhow::Error> {
+    type Error = EveryOrgToDonorError;
+    fn try_from(value: &EveryOrgDonorCsv) -> Result<Donor, EveryOrgToDonorError> {
         // This is _very_ important to check. We can't leak non-public information
-        let public_supporter = value.public_supporter == Some("true".to_string());
+        if value.public_supporter != Some("true".to_string()) {
+            return Err(EveryOrgToDonorError::PrivateSupporter);
+        }
+
         Ok(Donor {
             customer_id: match value.donor_id.as_deref() {
                 Some("") | None => None,
@@ -178,13 +192,13 @@ impl TryFrom<&EveryOrgDonorCsv> for Donor {
             },
             source: Some("every.org".to_string()),
             /* Public Fields */
-            name: match (public_supporter, value.name.as_deref()) {
-                (false, _) | (true, Some("")) | (true, None) => None,
-                (true, Some(v)) => Some(v.to_string()),
+            name: match value.name.as_deref() {
+                Some("") | None => None,
+                Some(v) => Some(v.to_string()),
             },
-            amount: match (public_supporter, value.amount.as_deref()) {
-                (false, _) | (true, Some("")) | (true, None) => None,
-                (true, Some(v)) => {
+            amount: match value.amount.as_deref() {
+                Some("") | None => return Err(EveryOrgToDonorError::NoAmount),
+                Some(v) => {
                     let amount: f64 = v.parse()?;
                     Some(amount as i64)
                 }

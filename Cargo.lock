@@ -124,6 +124,7 @@ dependencies = [
  "futures-lite 2.2.0",
  "reqwest",
  "serde",
+ "thiserror",
  "tokio",
  "toml",
 ]
