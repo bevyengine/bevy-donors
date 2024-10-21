@@ -53,3 +53,6 @@ This means you can select the license you prefer!
 All logos in the `logos` folder, the contents of `donor_info.toml`, generated `donors.toml`, and generated `metrics.toml` are _not_ licensed for use outside of the Bevy project. 
 
 This dual-licensing approach is the de-facto standard in the Rust ecosystem and there are [very good reasons](https://github.com/bevyengine/bevy/issues/2373) to include both.
+
+
+hi this is updated readme
