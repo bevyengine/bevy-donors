@@ -87,6 +87,9 @@ fn apply_donor_info(donors: &mut Vec<Donor>, donor_info: Vec<Donor>) {
                 if let Some(scale) = &donor_info.logo_scale {
                     donor.logo_scale = Some(*scale);
                 }
+                if let Some(true) = donor_info.anonymize {
+                    donor.name = None;
+                }
             }
         }
     }
@@ -140,6 +143,7 @@ struct Donor {
     past: Option<bool>,
     square_logo: Option<bool>,
     logo_scale: Option<f32>,
+    anonymize: Option<bool>,
 }
 
 #[derive(Default, Serialize)]

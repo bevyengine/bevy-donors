@@ -208,6 +208,7 @@ impl TryFrom<&EveryOrgDonorCsv> for Donor {
             logo: None,
             logo_scale: None,
             square_logo: None,
+            anonymize: None,
             style: None,
         })
     }
@@ -264,8 +265,8 @@ impl CsvData {
         let mut csv = String::new();
         for row in &self.ok {
             for column in row {
-                // disallow commas as this breaks the CSV
-                let column = column.replace(',', " ");
+                // disallow commas and newlines as this breaks the CSV
+                let column = column.replace(',', " ").replace('\n', " ");
                 csv.push_str(&column);
                 csv.push(',');
             }
