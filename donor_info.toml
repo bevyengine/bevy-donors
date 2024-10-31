@@ -44,3 +44,7 @@ name = "IceSentry"
 customer_id = "every.org:ef5c3e95-8f47-4b8d-8ad6-e59c776074cd"
 logo = "navier-ai.png"
 link = "https://navier.ai/"
+
+[[donor]]
+customer_id = "every.org:20c63206-7f73-4753-83fb-3f04ef462f60"
+anonymize = true
