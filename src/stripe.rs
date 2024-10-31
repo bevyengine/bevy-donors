@@ -142,6 +142,7 @@ pub(crate) async fn get_stripe_donors(now: DateTime<Utc>) -> Vec<Donor> {
                 style: None,
                 square_logo: None,
                 logo_scale: None,
+                anonymize: None,
             },
         );
     }
