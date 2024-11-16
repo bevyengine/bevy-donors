@@ -1,8 +1,8 @@
 use crate::{is_past, Donor};
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, NaiveDate, NaiveDateTime, NaiveTime, Utc};
 use reqwest::Client;
 use serde::Deserialize;
-use std::{error::Error, fs::File, num::ParseFloatError};
+use std::{collections::HashMap, error::Error, fs::File, num::ParseFloatError};
 use thiserror::Error;
 
 const DONOR_CSV_PATH: &str = "every_org_donors/donors.csv";
@@ -37,6 +37,7 @@ pub(crate) async fn get_every_org_donors(now: DateTime<Utc>) -> Result<Vec<Donor
         }
     };
     let mut donors = Vec::new();
+    let csv_donors = dedupe_csv_donors(csv_donors);
     for csv_donor in &csv_donors {
         let Ok(mut donor) = Donor::try_from(csv_donor) else {
             continue;
@@ -44,10 +45,13 @@ pub(crate) async fn get_every_org_donors(now: DateTime<Utc>) -> Result<Vec<Donor
         if csv_donor.recurring_donation_status.as_deref() == Some("Active") {
             donor.past = Some(false);
         } else {
-            let last_donation = csv_donor.last_donation.as_deref().unwrap_or("");
-            let past = if let Ok(payment_time) = DateTime::parse_from_str(last_donation, "%m/%d/%Y")
-            {
-                is_past(now, payment_time.to_utc())
+            let created = csv_donor.created.as_deref().unwrap_or("");
+            let past = if let Ok(payment_date) = NaiveDate::parse_from_str(created, "%m/%d/%Y") {
+                let naive_datetime =
+                    NaiveDateTime::new(payment_date, NaiveTime::from_hms_opt(0, 0, 0).unwrap());
+                let datetime =
+                    DateTime::<Utc>::from_naive_utc_and_offset(naive_datetime, chrono::offset::Utc);
+                is_past(now, datetime)
             } else {
                 true
             };
@@ -59,6 +63,31 @@ pub(crate) async fn get_every_org_donors(now: DateTime<Utc>) -> Result<Vec<Donor
     }
 
     Ok(donors)
+}
+
+/// Every.org returns all donations. We need to filter down to the _latest_ donation from someone
+fn dedupe_csv_donors(mut donors: Vec<EveryOrgDonorCsv>) -> Vec<EveryOrgDonorCsv> {
+    let mut donors = donors
+        .drain(..)
+        .map(|donor| {
+            // "created" is "this payment made" not "when donor started donating"
+            let created = donor.created.as_deref().unwrap_or("");
+            let created_date = NaiveDate::parse_from_str(created, "%m/%d/%Y").ok();
+            (created_date, donor)
+        })
+        .collect::<Vec<_>>();
+    donors.sort_by_key(|(date, _)| date.clone());
+    let mut deduped = HashMap::new();
+    for (_, donor) in donors {
+        let Some(donor_id) = &donor.donor_id else {
+            continue;
+        };
+        if !deduped.contains_key(donor_id) {
+            deduped.insert(donor_id.clone(), donor);
+        }
+    }
+
+    deduped.drain().map(|(_, v)| v).collect::<Vec<_>>()
 }
 
 #[allow(dead_code)]
