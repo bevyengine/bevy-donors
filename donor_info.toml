@@ -48,3 +48,7 @@ link = "https://navier.ai/"
 [[donor]]
 customer_id = "every.org:20c63206-7f73-4753-83fb-3f04ef462f60"
 anonymize = true
+
+[[donor]]
+customer_id = "every.org:9f5be61b-d183-4301-84a8-b57858802be1"
+name = "RyeToastyO"
