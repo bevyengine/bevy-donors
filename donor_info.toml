@@ -57,3 +57,7 @@ name = "RyeToastyO"
 customer_id = "every.org:b0c2ee43-8c72-4a0d-827e-f2fd4308299e"
 name = "Saveliy Yusufov"
 link = "https://smu160.github.io"
+
+[[donor]]
+customer_id = "every.org:8981a58f-044f-45f4-a454-da2d902cb2b0"
+name = "Alan Jesser"
