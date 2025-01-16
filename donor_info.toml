@@ -61,3 +61,7 @@ link = "https://smu160.github.io"
 [[donor]]
 customer_id = "every.org:8981a58f-044f-45f4-a454-da2d902cb2b0"
 name = "Alan Jesser"
+
+[[donor]]
+customer_id = "stripe:cus_Pk1d910e98zov2"
+name = "Petr Kharitonov"
