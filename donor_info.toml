@@ -70,3 +70,4 @@ name = "Petr Kharitonov"
 customer_id = "every.org:75b7e254-8374-4a65-8c63-ffe26166e48c"
 logo = "scorewarrior.svg"
 link = "https://scorewarrior.com/"
+logo_scale = 0.7
