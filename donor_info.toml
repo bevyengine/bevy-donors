@@ -65,3 +65,8 @@ name = "Alan Jesser"
 [[donor]]
 customer_id = "stripe:cus_Pk1d910e98zov2"
 name = "Petr Kharitonov"
+
+[[donor]]
+customer_id = "every.org:75b7e254-8374-4a65-8c63-ffe26166e48c"
+logo = "scorewarrior.svg"
+link = "https://scorewarrior.com/"
