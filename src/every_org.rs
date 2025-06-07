@@ -77,6 +77,7 @@ fn dedupe_csv_donors(mut donors: Vec<EveryOrgDonorCsv>) -> Vec<EveryOrgDonorCsv>
         })
         .collect::<Vec<_>>();
     donors.sort_by_key(|(date, _)| date.clone());
+    donors.reverse();
     let mut deduped = HashMap::new();
     for (_, donor) in donors {
         let Some(donor_id) = &donor.donor_id else {
