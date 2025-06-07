@@ -1,7 +1,17 @@
+# Foresight has prepaid until 4/26
 [[donor]]
-customer_id = "every.org:f38d804d-7ac9-4bc2-a623-64770ae11d25"
+# customer_id = "every.org:f38d804d-7ac9-4bc2-a623-64770ae11d25"
 link = "https://www.fslabs.ca"
 logo = "Foresight_Spatial_Labs.svg"
+amount = 4000
+
+# This skips an "early" payment for Foresight,
+# which we are treating as an extension to the main account.
+# this can be removed on 2025/11/04
+[[donor]]
+customer_id = "every.org:f92d255e-b838-4bd9-bf02-2f64416da60f"
+amount = 0
+anonymize = true
 
 [[donor]]
 customer_id = "stripe:cus_PihVbmEUk0vBkO"
