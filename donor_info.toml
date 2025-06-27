@@ -4,6 +4,11 @@ link = "https://www.fslabs.ca"
 logo = "Foresight_Spatial_Labs.svg"
 
 [[donor]]
+customer_id = "every.org:4e4cb5f3-5346-4ead-99a8-db7d094f45f3"
+link = "https://github.com/hazelthewitch"
+name = "Aurelia Rella"
+
+[[donor]]
 customer_id = "stripe:cus_PihVbmEUk0vBkO"
 logo = "dead_money.png"
 link = "https://deadmoney.gg"
