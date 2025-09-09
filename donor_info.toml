@@ -1,7 +1,8 @@
 [[donor]]
-customer_id = "every.org:f38d804d-7ac9-4bc2-a623-64770ae11d25"
+# customer_id = "every.org:f38d804d-7ac9-4bc2-a623-64770ae11d25"
 link = "https://www.fslabs.ca"
 logo = "Foresight_Spatial_Labs.svg"
+amount = 4000
 
 [[donor]]
 customer_id = "every.org:4e4cb5f3-5346-4ead-99a8-db7d094f45f3"
