@@ -76,3 +76,7 @@ customer_id = "every.org:75b7e254-8374-4a65-8c63-ffe26166e48c"
 logo = "scorewarrior.svg"
 link = "https://scwr.gg/bevy"
 logo_scale = 0.7
+
+[[donor]]
+customer_id = "every.org:ebc41ad1-d4cb-4216-a60c-f30b170fcd2a"
+name = "Mysvac"
