@@ -80,3 +80,9 @@ logo_scale = 0.7
 [[donor]]
 customer_id = "every.org:ebc41ad1-d4cb-4216-a60c-f30b170fcd2a"
 name = "Mysvac"
+
+[[donor]]
+customer_id = "every.org:c2eac8de-e69f-41de-8a31-11f43b55932a"
+logo = "pouncelight.png"
+link = "https://pouncelight.games/"
+square_logo = true
