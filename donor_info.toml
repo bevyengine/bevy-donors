@@ -86,3 +86,7 @@ customer_id = "every.org:c2eac8de-e69f-41de-8a31-11f43b55932a"
 logo = "pouncelight.png"
 link = "https://pouncelight.games/"
 square_logo = true
+
+[[donor]]
+customer_id = "955952ab-57d5-410e-8e57-815ee02ea520"
+name = "Br3nnabee"
