@@ -90,3 +90,8 @@ square_logo = true
 [[donor]]
 customer_id = "every.org:955952ab-57d5-410e-8e57-815ee02ea520"
 name = "Br3nnabee"
+
+[[donor]]
+customer_id = "every.org:503cc334-9f49-45f5-8520-1e4034d48fc9"
+name = "Jan Hohenheim"
+link = "https://github.com/janhohenheim"
