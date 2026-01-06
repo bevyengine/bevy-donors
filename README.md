@@ -4,7 +4,7 @@ The source of truth for current Bevy Donor data. This syncs data from Every.org 
 
 ## How This Works
 
-This repo periodically runs the `update_donors.yml` GitHub workflow, which pulls current donor info from Stripe, merges it with `donor_info.toml`, and generates two files:
+This repo periodically runs the `update_donors.yml` GitHub workflow, which pulls current donor info from Every.org and Stripe, merges it with `donor_info.toml`, and generates two files:
 
 1. `donors.toml`: a formatted list of all current and past donors and their relevant metadata (Stripe customer id, amount donated, name, link, logo, etc)
 2. `metrics.toml`: metrics computed from the data in `donors.toml` (total monthly donations in USD, donor count, sponsor count)
