@@ -98,3 +98,9 @@ name = "natepiano"
 [[donor]]
 customer_id = "every.org:e0a5729f-8cdd-4b4a-aab5-de1146126a8f"
 name = "NNVTN"
+
+[[donor]]
+customer_id = "every.org:0af46101-7a5e-4d02-8f3c-a90c0a86896f"
+logo = "360geo.png"
+link = "https://www.360geo.nl/en/georizon"
+square_logo = true
