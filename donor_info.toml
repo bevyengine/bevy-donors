@@ -104,3 +104,7 @@ customer_id = "every.org:0af46101-7a5e-4d02-8f3c-a90c0a86896f"
 logo = "360geo.png"
 link = "https://www.360geo.nl/en/georizon"
 square_logo = true
+
+[[donor]]
+customer_id = "every.org:ec31ca2f-1021-4109-9665-557fa5390d23"
+name = "Goulven Clec'h"
