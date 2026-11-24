@@ -108,3 +108,7 @@ square_logo = true
 [[donor]]
 customer_id = "every.org:ec31ca2f-1021-4109-9665-557fa5390d23"
 name = "Goulven Clec'h"
+
+[[donor]]
+customer_id = "every.org:e6434d51-6605-4fe4-ae30-9e725662fff5"
+name = "NikTheMimic"
